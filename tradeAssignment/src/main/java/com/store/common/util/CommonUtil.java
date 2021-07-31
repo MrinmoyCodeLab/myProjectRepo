@@ -2,6 +2,7 @@ package com.store.common.util;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -41,14 +42,16 @@ public  class CommonUtil {
 	
 	public static LocalDateTime getDateFromString(String date) {
 		
-		LocalDateTime dateTime = null ;
+		LocalDate dateTime = null ;
+		LocalDateTime localDateTime = null;
 		try {
 			DateTimeFormatter simpleDateFormat = DateTimeFormatter.ofPattern(CommonConstant.DATE_FORMAT);
-			dateTime = LocalDateTime.parse(date, simpleDateFormat );
+			dateTime = LocalDate.parse(date, simpleDateFormat );
+			localDateTime  = dateTime.atStartOfDay();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return dateTime;
+		return localDateTime;
 		
 	}
 	
@@ -80,6 +83,8 @@ public  class CommonUtil {
 		return dateTime;
 		
 	}
+	
+	
 	
 	
 }
