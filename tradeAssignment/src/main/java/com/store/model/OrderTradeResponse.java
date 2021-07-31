@@ -3,7 +3,7 @@ package com.store.model;
 public class OrderTradeResponse {
 	
 	private String tradeId;
-	private String version;
+	private Long version;
 	private String createdDate;
 	
 	public String getTradeId() {
@@ -12,10 +12,10 @@ public class OrderTradeResponse {
 	public void setTradeId(String tradeId) {
 		this.tradeId = tradeId;
 	}
-	public String getVersion() {
+	public Long getVersion() {
 		return version;
 	}
-	public void setVersion(String version) {
+	public void setVersion(Long version) {
 		this.version = version;
 	}
 	public String getCreatedDate() {

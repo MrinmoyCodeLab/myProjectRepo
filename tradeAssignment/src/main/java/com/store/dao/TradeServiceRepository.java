@@ -10,6 +10,6 @@ import com.store.model.TradeDetailVo;
 public interface TradeServiceRepository extends JpaRepository<TradeDetailVo, String>{
 	
 	public List<TradeDetailVo> findAllByTradeId(String tradeId);
-	
+	public List<TradeDetailVo> findAllByExpired(String expired);
 	
 }

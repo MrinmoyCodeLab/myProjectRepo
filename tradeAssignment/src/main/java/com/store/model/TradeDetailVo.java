@@ -2,18 +2,35 @@ package com.store.model;
 
 import java.sql.Timestamp;
 
-import org.springframework.stereotype.Component;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
-@Component
+
+
+@Entity
 public class TradeDetailVo {
 	
+	@Id
+	@GeneratedValue
+	@Column(name = "trade_txn_id")
+	private Long tradeTxnID;
+	@Column
 	private String tradeId;
-	private int version;
+	@Column
+	private Long version;
+	@Column
 	private String counterPartyId;
+	@Column
 	private String bookId;
+	@Column
 	private Timestamp maturityDate;
+	@Column
 	private Timestamp createdDate;
+	@Column
 	private String expired;
+	
 	public String getTradeId() {
 		return tradeId;
 	}
@@ -21,10 +38,10 @@ public class TradeDetailVo {
 		this.tradeId = tradeId;
 	}
 	
-	public int getVersion() {
+	public Long getVersion() {
 		return version;
 	}
-	public void setVersion(int version) {
+	public void setVersion(Long version) {
 		this.version = version;
 	}
 	public String getCounterPartyId() {

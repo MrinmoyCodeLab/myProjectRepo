@@ -18,7 +18,8 @@ public class TradeAdvController {
 	public TradeAdvService tradeAdvService;
 	
 	@PostMapping(CommonConstant.TRADE_SERVICE_URL)
-	public ResponseEntity<Object> saveTradeDetails(@RequestBody OrderTradeRequest request){				
+	public ResponseEntity<Object> saveTradeDetails(@RequestBody OrderTradeRequest request){	
+		System.out.println("saveTradeDetails started .......!!!!!");
 		return new ResponseEntity<Object>((OrderTradeResponse) tradeAdvService.saveTradeDetails(request), HttpStatus.OK);
 		
 	}
