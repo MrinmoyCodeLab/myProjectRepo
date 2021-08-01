@@ -38,27 +38,17 @@ public class TradeAdvService {
 				LocalDateTime maturityDate = CommonUtil.getDateFromString(orderTradeRequest.getMaturityDate());
 				if(maturityDate!= null && maturityDate.isBefore(CommonUtil.getCurrentSystemDate())) {
 					throw new TradeServiceException(CommonConstant.TRADE_NOT_ACCEPTABLE, CommonConstant.MATURITY_DATE_ERROR , TradeAdvService.class );
+				}				
+				int count = tradeServiceRepository.findUpperVersionByTradeId(orderTradeRequest.getTradeId(),orderTradeRequest.getVersion());
+				if(count > 0) {
+					throw new TradeServiceException(CommonConstant.TRADE_NOT_ACCEPTABLE, CommonConstant.MATURITY_DATE_ERROR , TradeAdvService.class );
 				}
 				
-				List<TradeDetailVo> tradeDetailList = tradeServiceRepository.findAllByTradeId(orderTradeRequest.getTradeId());
-				if(CommonUtil.assertNotNullList(tradeDetailList)) {
-					Optional<Integer> minVersion=  tradeDetailList.stream().map((TradeDetailVo tradeDetailVo)->{
-											return tradeDetailVo.getVersion();
-									}
-								).min(Integer::compare);
-					
-					if(orderTradeRequest.getVersion() < minVersion.get()) {
-						throw new TradeServiceException(CommonConstant.TRADE_NOT_ACCEPTABLE, CommonConstant.MATURITY_DATE_ERROR , TradeAdvService.class );
-					}
-					for(TradeDetailVo tradeDetailVo : tradeDetailList) {
-						if(CommonUtil.assertNotEmptyString(orderTradeRequest.getTradeId()) &&
-								orderTradeRequest.getTradeId().equalsIgnoreCase(tradeDetailVo.getTradeId())
-								&& orderTradeRequest.getVersion() == tradeDetailVo.getVersion() ) {
-							return tradeAdvHelper.saveTradeDetailsinRepo(tradeDetailVo, orderTradeRequest, false);
-						}
-					}
-				}				
-				return tradeAdvHelper.saveTradeDetailsinRepo(new TradeDetailVo(), orderTradeRequest, true);				
+				TradeDetailVo tradeDetailVo = tradeServiceRepository.findTradeByVersion(orderTradeRequest.getTradeId(),orderTradeRequest.getVersion());
+				if(CommonUtil.assertNotNullObject(tradeDetailVo)) {
+					return tradeAdvHelper.saveTradeDetailsinRepo(tradeDetailVo, orderTradeRequest, false);	
+				}
+				return tradeAdvHelper.saveTradeDetailsinRepo(new TradeDetailVo(), orderTradeRequest , true);								
 			}
 			System.out.println("saveTradeDetails Service End .......!!!!!");
 		}
@@ -77,19 +67,9 @@ public class TradeAdvService {
 	@Scheduled(cron = "0 10 10 10 * ?")
 	public void validateTradeExpiryInStore() throws Exception {
 		
-		List<TradeDetailVo> tradeDetailList = new ArrayList<TradeDetailVo>();
 		try {
 			System.out.println("validateTradeExpiryInStore started .......!!!!!");
-			LocalDateTime currentDate = CommonUtil.getCurrentSystemDate();
-			tradeDetailList = tradeServiceRepository.findAllByExpired("N");
-			if(CommonUtil.assertNotNullList(tradeDetailList)) {
-				for(TradeDetailVo tradeDetailVo : tradeDetailList) {
-					if(currentDate.isAfter(tradeDetailVo.getMaturityDate().toLocalDateTime())) {
-						tradeDetailVo.setExpired("Y");
-						tradeServiceRepository.save(tradeDetailVo);
-					}					
-				}
-			}
+			tradeServiceRepository.updateAllByExpired("N");
 			System.out.println("validateTradeExpiryInStore Ended .......!!!!!");
 		} catch (Exception e) {
 			e.printStackTrace();

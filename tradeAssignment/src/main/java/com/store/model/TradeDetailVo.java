@@ -7,29 +7,30 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 
 
-@Entity
+@Entity(name = "TRADE_STORE")
 public class TradeDetailVo {
 	
 	@Id
 	@GeneratedValue
-	@Column(name = "trade_txn_id")
+	@Column(name = "TRADE_TXN_ID")
 	private Long tradeTxnID;
-	@Column
+	@Column(name = "TRADE_ID")
 	private String tradeId;
-	@Column
+	@Column(name = "VERSION")
 	private int version;
-	@Column
+	@Column(name = "COUNTER_PARTY_ID")
 	private String counterPartyId;
-	@Column
+	@Column(name = "BOOK_ID")
 	private String bookId;
-	@Column
+	@Column(name = "MATURITY_DATE")
 	private Timestamp maturityDate;
-	@Column
+	@Column(name = "CREATE_DATE")
 	private Timestamp createdDate;
-	@Column
+	@Column(name = "EXPIRED")
 	private String expired;
 
 	

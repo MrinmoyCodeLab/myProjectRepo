@@ -8,6 +8,7 @@ public final class CommonConstant {
 	
 	public final static String DATE_FORMAT = "dd/MM/yyyy";
 	
-	public final static String MATURITY_DATE_ERROR = "System will not allow the trade if maturiy date is less that Today's Date!";
+	public final static String MATURITY_DATE_ERROR = "System will not allow the trade if maturiy date is less that Today's Date .";
+	public final static String LOWER_TRADE_ERROR = "System will not allow the trade if higher trade already exists.";
 
 }

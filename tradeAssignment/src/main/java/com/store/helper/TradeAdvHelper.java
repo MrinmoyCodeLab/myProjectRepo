@@ -35,7 +35,7 @@ public class TradeAdvHelper {
 				tradeDetailVo = tradeServiceRepository.save(tradeDetailsVo);
 				
 			}else {
-				tradeDetailsVo.setVersion(orderTradeReq.getVersion());
+				
 				tradeDetailsVo.setCounterPartyId(orderTradeReq.getCounterPartyId());
 				tradeDetailsVo.setBookId(orderTradeReq.getBookId());
 				tradeDetailsVo.setMaturityDate(Timestamp.valueOf(CommonUtil.getDateFromString(orderTradeReq.getMaturityDate())));

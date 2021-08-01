@@ -1,11 +1,13 @@
 package com.store;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.Test;
@@ -109,10 +111,10 @@ public class TradeAssignmentApplicationTests {
 	public void test2_maturityDateCompareToCurrentDate() throws Exception {		
 		
 		OrderTradeRequest ordTrdReq =  new OrderTradeRequest(); 		
-		ordTrdReq.setTradeId("T3");
+		ordTrdReq.setTradeId("T4");
 		ordTrdReq.setVersion(1);
-		ordTrdReq.setCounterPartyId("CP-3");
-		ordTrdReq.setBookId("B2");
+		ordTrdReq.setCounterPartyId("CP-4");
+		ordTrdReq.setBookId("B3");
 		ordTrdReq.setMaturityDate("30/06/2021");		
 		MvcResult mvcResult  = mvc.perform(post("/orderTradeService")
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -126,30 +128,42 @@ public class TradeAssignmentApplicationTests {
 	
 	@Test
 	public void test3_compareLowerVersionTradeErrorCase() throws Exception {		
-		test1_saveTradeDetails();
+		
 		OrderTradeRequest ordTrdReq =  new OrderTradeRequest(); 		
-		ordTrdReq.setTradeId("T3");
-		ordTrdReq.setVersion(1);
-		ordTrdReq.setCounterPartyId("CP-3");
-		ordTrdReq.setBookId("B2");
+		ordTrdReq.setTradeId("T4");
+		ordTrdReq.setVersion(3);
+		ordTrdReq.setCounterPartyId("CP-4");
+		ordTrdReq.setBookId("B4");
 		ordTrdReq.setMaturityDate("30/12/2021");		
 		MvcResult mvcResult  = mvc.perform(post("/orderTradeService")
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(JsonUtil.convertStringToJsonString(ordTrdReq)))
 				.andReturn();		
-		int status = mvcResult.getResponse().getStatus();
-		assertEquals(406, status);
+		int status = mvcResult.getResponse().getStatus();		
+		assertEquals(200, status);
+		OrderTradeRequest ordTrdReq2 =  new OrderTradeRequest(); 		
+		ordTrdReq2.setTradeId("T4");
+		ordTrdReq2.setVersion(1);
+		ordTrdReq2.setCounterPartyId("CP-4");
+		ordTrdReq2.setBookId("B4");
+		ordTrdReq2.setMaturityDate("30/12/2021");		
+		MvcResult mvcResult2  = mvc.perform(post("/orderTradeService")
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(JsonUtil.convertStringToJsonString(ordTrdReq2)))
+				.andReturn();		
+		int status2 = mvcResult2.getResponse().getStatus();		
+		assertEquals(406, status2);
 	
 	}
 	
 	@Test
 	public void test4_updatedExistingTrade() throws Exception {		
-		test1_saveTradeDetails();
+		
 		OrderTradeRequest ordTrdReq =  new OrderTradeRequest(); 		
-		ordTrdReq.setTradeId("T2");
+		ordTrdReq.setTradeId("T5");
 		ordTrdReq.setVersion(1);
-		ordTrdReq.setCounterPartyId("CP-3");
-		ordTrdReq.setBookId("B3");
+		ordTrdReq.setCounterPartyId("CP-5");
+		ordTrdReq.setBookId("B4");
 		ordTrdReq.setMaturityDate("30/12/2021");		
 		MvcResult mvcResult  = mvc.perform(post("/orderTradeService")
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -157,6 +171,33 @@ public class TradeAssignmentApplicationTests {
 				.andReturn();		
 		int status = mvcResult.getResponse().getStatus();
 		assertEquals(200, status);
+		
+		OrderTradeRequest ordTrdReq2 =  new OrderTradeRequest(); 		
+		ordTrdReq2.setTradeId("T5");
+		ordTrdReq2.setVersion(1);
+		ordTrdReq2.setCounterPartyId("CP-3");
+		ordTrdReq2.setBookId("B3");
+		ordTrdReq2.setMaturityDate("30/11/2021");		
+		MvcResult mvcResult2  = mvc.perform(post("/orderTradeService")
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(JsonUtil.convertStringToJsonString(ordTrdReq2)))
+				.andReturn();		
+		int status2 = mvcResult2.getResponse().getStatus();
+		assertEquals(200, status2);		
+		try {			
+			
+			
+			TradeDetailVo tradeDetailVo = tradeServiceRepository.findTradeByVersion(ordTrdReq2.getTradeId(), ordTrdReq2.getVersion());
+			
+			if(ordTrdReq2.getBookId().equalsIgnoreCase(tradeDetailVo.getBookId()) && ordTrdReq2.getCounterPartyId().equalsIgnoreCase(tradeDetailVo.getCounterPartyId()) ) {
+				assertTrue(true);
+			}else {
+				assertTrue(false);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertTrue(false);
+		}
 	
 	}
 	
@@ -169,19 +210,18 @@ public class TradeAssignmentApplicationTests {
 		ordTrdReq.setVersion(1);
 		ordTrdReq.setCounterPartyId("CP-3");
 		ordTrdReq.setBookId("B3");
-		ordTrdReq.setExpired("N");;
+		ordTrdReq.setExpired("N");
 		ordTrdReq.setMaturityDate(Timestamp.valueOf(CommonUtil.getDateFromString("30/06/2021")));		
 		ordTrdReq.setCreatedDate(Timestamp.valueOf(CommonUtil.getCurrentSystemDate()));
 		try {
-			tradeServiceRepository.save(ordTrdReq);
-			tradeAdvService.validateTradeExpiryInStore();
+			TradeDetailVo nonExpiredTrade =  tradeServiceRepository.save(ordTrdReq);
+			tradeAdvService.validateTradeExpiryInStore();			
+			String isExpired = tradeServiceRepository.findExpiredTrade(nonExpiredTrade.getTradeId(), nonExpiredTrade.getVersion(),"Y");
+			assertNotNull("Y",isExpired);
 		} catch (Exception e) {
 			e.printStackTrace();
 			assertTrue(false);
 		}
-				
-		assertTrue(true);
-	
 	}
 	
 }
