@@ -64,7 +64,7 @@ public class TradeAdvService {
 	}
 	
 
-	@Scheduled(cron = "0 12 * * ?")
+	@Scheduled(cron = "0 12 * * * ?")
 	public void validateTradeExpiryInStore() throws Exception {
 		
 		try {
