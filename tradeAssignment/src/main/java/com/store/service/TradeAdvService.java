@@ -32,7 +32,7 @@ public class TradeAdvService {
 		
 		OrderTradeResponse response = new OrderTradeResponse();
 		try {
-			System.out.println("saveTradeDetails Service started .......!!!!!");
+			System.out.println("saveTradeDetails Service started .");
 			if(CommonUtil.assertNotNullObject(orderTradeRequest)) {
 				
 				LocalDateTime maturityDate = CommonUtil.getDateFromString(orderTradeRequest.getMaturityDate());
@@ -41,7 +41,7 @@ public class TradeAdvService {
 				}				
 				int count = tradeServiceRepository.findUpperVersionByTradeId(orderTradeRequest.getTradeId(),orderTradeRequest.getVersion());
 				if(count > 0) {
-					throw new TradeServiceException(CommonConstant.TRADE_NOT_ACCEPTABLE, CommonConstant.MATURITY_DATE_ERROR , TradeAdvService.class );
+					throw new TradeServiceException(CommonConstant.TRADE_NOT_ACCEPTABLE, CommonConstant.LOWER_TRADE_ERROR , TradeAdvService.class );
 				}
 				
 				TradeDetailVo tradeDetailVo = tradeServiceRepository.findTradeByVersion(orderTradeRequest.getTradeId(),orderTradeRequest.getVersion());
@@ -50,7 +50,7 @@ public class TradeAdvService {
 				}
 				return tradeAdvHelper.saveTradeDetailsinRepo(new TradeDetailVo(), orderTradeRequest , true);								
 			}
-			System.out.println("saveTradeDetails Service End .......!!!!!");
+			System.out.println("saveTradeDetails Service End .");
 		}
 		catch (TradeServiceException e) {
 			e.printStackTrace();
@@ -64,16 +64,16 @@ public class TradeAdvService {
 	}
 	
 
-	@Scheduled(cron = "0 10 10 10 * ?")
+	@Scheduled(cron = "0 12 * * ?")
 	public void validateTradeExpiryInStore() throws Exception {
 		
 		try {
-			System.out.println("validateTradeExpiryInStore started .......!!!!!");
+			System.out.println("validateTradeExpiryInStore started .");
 			tradeServiceRepository.updateAllByExpired("N");
-			System.out.println("validateTradeExpiryInStore Ended .......!!!!!");
+			System.out.println("validateTradeExpiryInStore Ended .");
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("validateTradeExpiryInStore Exception .......!!!!!");
+			System.out.println("validateTradeExpiryInStore Exception .");
 			throw new Exception(e.getMessage());
 		}
 		

@@ -4,7 +4,6 @@ public class TradeServiceException extends RuntimeException{
 	
 	private String errorCode;
 	private Class<?> sourceClass;
-	private StackTraceElement[] elements;
 	
 	public TradeServiceException(String code, String message, Class<?> sourceClass ) {
 		super(message);
@@ -18,12 +17,7 @@ public class TradeServiceException extends RuntimeException{
 	public void setErrorCode(String errorCode) {
 		this.errorCode = errorCode;
 	}
-	public StackTraceElement[] getElements() {
-		return elements;
-	}
-	public void setElements(StackTraceElement[] elements) {
-		this.elements = elements;
-	}
+	
 	
 	
 

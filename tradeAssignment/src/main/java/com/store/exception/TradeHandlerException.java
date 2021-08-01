@@ -12,7 +12,7 @@ import com.store.common.error.ErrorResponse;
 public class TradeHandlerException {
 
 	@ExceptionHandler(value= {Exception.class})
-	public ResponseEntity<ErrorResponse> handlerException(RuntimeException exception) {
+	public ResponseEntity<ErrorResponse> handlerException(Exception exception) {
 		
 		String code ="";
 		String message ="";
@@ -20,8 +20,7 @@ public class TradeHandlerException {
 			TradeServiceException tradeServiceException = (TradeServiceException) exception;
 			code = tradeServiceException.getErrorCode();
 			message = tradeServiceException.getMessage();
-		}
-		
+		}	
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setCode(code);
 		errorResponse.setMessage(message);
