@@ -1,6 +1,8 @@
 package com.store.model;
 
 
+import java.math.BigInteger;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -8,7 +10,7 @@ public class OrderTradeRequest {
 
 
 	private String tradeId;
-	private Long version;
+	private int version;
 	private String counterPartyId;
 	private String bookId;
 	private String maturityDate;
@@ -19,10 +21,10 @@ public class OrderTradeRequest {
 		this.tradeId = tradeId;
 	}
 	
-	public Long getVersion() {
+	public int getVersion() {
 		return version;
 	}
-	public void setVersion(Long version) {
+	public void setVersion(int version) {
 		this.version = version;
 	}
 	public String getCounterPartyId() {

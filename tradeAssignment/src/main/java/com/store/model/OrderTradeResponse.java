@@ -1,9 +1,11 @@
 package com.store.model;
 
+import java.math.BigInteger;
+
 public class OrderTradeResponse {
 	
 	private String tradeId;
-	private Long version;
+	private int version;
 	private String createdDate;
 	
 	public String getTradeId() {
@@ -12,10 +14,11 @@ public class OrderTradeResponse {
 	public void setTradeId(String tradeId) {
 		this.tradeId = tradeId;
 	}
-	public Long getVersion() {
+
+	public int getVersion() {
 		return version;
 	}
-	public void setVersion(Long version) {
+	public void setVersion(int version) {
 		this.version = version;
 	}
 	public String getCreatedDate() {

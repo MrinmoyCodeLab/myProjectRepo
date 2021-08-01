@@ -1,5 +1,6 @@
 package com.store.model;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
@@ -19,7 +20,7 @@ public class TradeDetailVo {
 	@Column
 	private String tradeId;
 	@Column
-	private Long version;
+	private int version;
 	@Column
 	private String counterPartyId;
 	@Column
@@ -30,7 +31,14 @@ public class TradeDetailVo {
 	private Timestamp createdDate;
 	@Column
 	private String expired;
+
 	
+	public Long getTradeTxnID() {
+		return tradeTxnID;
+	}
+	public void setTradeTxnID(Long tradeTxnID) {
+		this.tradeTxnID = tradeTxnID;
+	}
 	public String getTradeId() {
 		return tradeId;
 	}
@@ -38,10 +46,12 @@ public class TradeDetailVo {
 		this.tradeId = tradeId;
 	}
 	
-	public Long getVersion() {
+	
+	
+	public int getVersion() {
 		return version;
 	}
-	public void setVersion(Long version) {
+	public void setVersion(int version) {
 		this.version = version;
 	}
 	public String getCounterPartyId() {

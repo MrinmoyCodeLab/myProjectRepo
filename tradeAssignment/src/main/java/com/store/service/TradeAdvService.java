@@ -1,6 +1,7 @@
 package com.store.service;
 
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,17 +42,18 @@ public class TradeAdvService {
 				
 				List<TradeDetailVo> tradeDetailList = tradeServiceRepository.findAllByTradeId(orderTradeRequest.getTradeId());
 				if(CommonUtil.assertNotNullList(tradeDetailList)) {
-					Optional<Long> minVersion=  tradeDetailList.stream().map((TradeDetailVo tradeDetailVo)->{
+					Optional<Integer> minVersion=  tradeDetailList.stream().map((TradeDetailVo tradeDetailVo)->{
 											return tradeDetailVo.getVersion();
 									}
-								).min(Long::compare);
+								).min(Integer::compare);
 					
 					if(orderTradeRequest.getVersion() < minVersion.get()) {
 						throw new TradeServiceException(CommonConstant.TRADE_NOT_ACCEPTABLE, CommonConstant.MATURITY_DATE_ERROR , TradeAdvService.class );
 					}
 					for(TradeDetailVo tradeDetailVo : tradeDetailList) {
 						if(CommonUtil.assertNotEmptyString(orderTradeRequest.getTradeId()) &&
-								orderTradeRequest.getTradeId().equalsIgnoreCase(tradeDetailVo.getTradeId())) {
+								orderTradeRequest.getTradeId().equalsIgnoreCase(tradeDetailVo.getTradeId())
+								&& orderTradeRequest.getVersion() == tradeDetailVo.getVersion() ) {
 							return tradeAdvHelper.saveTradeDetailsinRepo(tradeDetailVo, orderTradeRequest, false);
 						}
 					}
@@ -59,7 +61,11 @@ public class TradeAdvService {
 				return tradeAdvHelper.saveTradeDetailsinRepo(new TradeDetailVo(), orderTradeRequest, true);				
 			}
 			System.out.println("saveTradeDetails Service End .......!!!!!");
-		} catch (Exception e) {
+		}
+		catch (TradeServiceException e) {
+			e.printStackTrace();
+			throw new TradeServiceException(e.getErrorCode(),e.getMessage() , TradeAdvService.class );
+		}catch (Exception e) {
 			e.printStackTrace();
 			throw new TradeServiceException("500",e.getMessage() , TradeAdvService.class );
 		}
@@ -69,7 +75,7 @@ public class TradeAdvService {
 	
 
 	@Scheduled(cron = "0 10 10 10 * ?")
-	public void validateTradeExpiryInStore() {
+	public void validateTradeExpiryInStore() throws Exception {
 		
 		List<TradeDetailVo> tradeDetailList = new ArrayList<TradeDetailVo>();
 		try {
@@ -88,6 +94,7 @@ public class TradeAdvService {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("validateTradeExpiryInStore Exception .......!!!!!");
+			throw new Exception(e.getMessage());
 		}
 		
 	}
