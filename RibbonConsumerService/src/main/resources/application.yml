@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: ConsumerService2
+ 
+server:
+  port: 8888
+
+eureka:
+  client:
+    register-with-eureka: true
+
+ribbon:
+    eureka:
+      enabled: false
+      

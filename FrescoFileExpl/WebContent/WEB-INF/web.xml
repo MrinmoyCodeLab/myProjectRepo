@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  
+  
+  <welcome-file-list>
+    	<welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+  
+  <display-name>Archetype Created Web Application</display-name>
+  
+  <servlet>
+  	<servlet-name>com.EditFile</servlet-name>
+  	<servlet-class>com.EditFile</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>com.Editor</servlet-name>  	
+  	<servlet-class>com.Editor</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>com.FileExplorer</servlet-name>  
+  	<servlet-class>com.FileExplorer</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>com.SaveFile</servlet-name>  
+  	<servlet-class>com.SaveFile</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>com.EditFile</servlet-name>
+  	<url-pattern>/EditFile</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>com.Editor</servlet-name>
+  	<url-pattern>/Editor</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>com.FileExplorer</servlet-name>
+  	<url-pattern>/FileExplorer</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>com.SaveFile</servlet-name>
+  	<url-pattern>/SaveFile</url-pattern>
+  </servlet-mapping>
+  
+  
+  
+  
+</web-app>
